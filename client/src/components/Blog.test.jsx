@@ -1,4 +1,5 @@
 import React from "react";
+import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Blog from "./Blog";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -31,7 +32,7 @@ describe("testing the component", () => {
       },
     };
 
-    const { container } = render(testHelper(null, blog));
+    render(testHelper(null, blog));
     const likeButton = screen.queryByText("like");
     const removeButton = screen.queryByText("remove");
     const Added = screen.queryByText(/Added/);
@@ -57,7 +58,7 @@ describe("testing the component", () => {
       password: "the",
     };
 
-    const { container } = render(testHelper(theUser, blog));
+    render(testHelper(theUser, blog));
     const likeButton = screen.queryByText("like");
     const removeButton = screen.queryByText("remove");
     const Added = screen.queryByText(/Added/);
@@ -80,7 +81,7 @@ describe("testing the component", () => {
     };
     const theUser = blog.user;
 
-    const { container } = render(testHelper(theUser, blog));
+    render(testHelper(theUser, blog));
     const likeButton = screen.queryByText("like");
     const removeButton = screen.queryByText("remove");
     const Added = screen.queryByText(/Added/);

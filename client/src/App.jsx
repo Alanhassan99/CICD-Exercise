@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import CreateBlogForm from "./components/CreateBlogForm";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Blogs from "./components/Blogs";
 import Users from "./components/Users";
@@ -10,7 +9,6 @@ import User from './components/User'
 import Login from "./components/Login";
 import PageNotFound from "./components/PageNotFound.jsx";
 import ErrorBoundary from "./errorBoundary.jsx";
-import styled from "styled-components";
 import useUserStore from './userstore'
 import { useErrorActions } from './store'
 import { useBlogActions } from './blogstore'
@@ -55,6 +53,7 @@ const App = () => {
 
   useEffect(() => {
     initializeBlogs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

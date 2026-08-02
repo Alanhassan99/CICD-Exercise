@@ -8,6 +8,7 @@ const User = () => {
   const users = useUsers()
   const user = users.find(u => u.id === id)
   const { initializeUsers } = useUsersActions()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { initializeUsers() }, [])
   if (!user) return <div>loading...</div>
   const blogs = user.blogs

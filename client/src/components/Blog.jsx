@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import blogService from "../services/blogs";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useBlogActions } from '../blogstore'
 
@@ -123,7 +122,6 @@ const RemoveButton = styled.button`
 `;
 
 const Blog = ({ blogs, user, handleBlogRemove }) => {
-  const navigate = useNavigate();
   const { blogLike } = useBlogActions()
   const { blogComment } = useBlogActions()
   const id = useParams().id;

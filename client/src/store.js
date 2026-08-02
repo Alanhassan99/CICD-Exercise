@@ -3,7 +3,7 @@ const useErrorStore = create((set) => ({
   errorMessage: null,
   actions: {
     error: () => {
-      set(state => ({
+      set(() => ({
         errorMessage: 'wrong username or password'
       }))
 

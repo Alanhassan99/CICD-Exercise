@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { useUsersActions } from '../usersstore'
 import { useUsers } from '../usersstore'
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
 const Users = () => {
   const { initializeUsers } = useUsersActions()
   const theUsers = useUsers()
   useEffect(() => {
     initializeUsers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
