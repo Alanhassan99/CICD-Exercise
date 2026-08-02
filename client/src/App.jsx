@@ -4,7 +4,7 @@ import CreateBlogForm from "./components/CreateBlogForm";
 import blogService from "./services/blogs";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Blogs from "./components/blogs";
-import Users from "./components/Users";
+import Users from "./components/users";
 import User from './components/User'
 import Login from "./components/Login";
 import PageNotFound from "./components/PageNotFound.jsx";
