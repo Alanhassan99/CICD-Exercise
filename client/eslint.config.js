@@ -40,5 +40,5 @@ export default [
       "no-console": "off",
     },
   },
-  "prettier",
+  prettier,
 ];
