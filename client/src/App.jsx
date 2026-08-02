@@ -3,7 +3,7 @@ import Blog from "./components/Blog";
 import CreateBlogForm from "./components/CreateBlogForm";
 import blogService from "./services/blogs";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import Blogs from "./components/Blogs";
+import Blogs from "./components/blogs";
 import Users from "./components/Users";
 import User from './components/User'
 import Login from "./components/Login";
