@@ -68,6 +68,13 @@ jobs:
       - name: Run Playwright tests
         run: npm test
 
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
   deploy:
     needs: [build_and_test]
     runs-on: ubuntu-latest
@@ -100,18 +107,16 @@ jobs:
 
       - name: Discord notification (success)
         if: ${{ success() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: ${{ job.status }}
-          title: "Deployment succeeded"
-          description: "A new version was deployed"
+          args: "✅ Deployment succeeded for {{ EVENT_PAYLOAD.repository.full_name }} (commit ${{ github.sha }} by ${{ github.actor }})"
 
       - name: Discord notification (failure)
         if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: ${{ job.status }}
-          title: "Build failed"
-          description: "Commit ${{ github.sha }} by ${{ github.actor }} broke the build. See: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          args: "❌ Build failed on commit ${{ github.sha }} by ${{ github.actor }}. See: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
