@@ -68,9 +68,12 @@ jobs:
       - name: Run Playwright tests
         run: npm test
 
-    deploy:
-      needs: [build_and_test]
-      runs-on: ubuntu-latest
+  deploy:
+    needs: [build_and_test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
       - name: Trigger deployment
         if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
@@ -88,27 +91,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
 
-  notification-discord: 
+  notification-discord:
     needs: [build_and_test, deploy]
     if: always()
-    runs-on: ubuntu latest
-    steps: 
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v6
 
-      - name: Discord notification(success)
+      - name: Discord notification (success)
         if: ${{ success() }}
         uses: Ilshidur/action-discord@master
         with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        status: ${{job.status}}
-        title: "Deployment succeeded"
-        description: "A new version was deployed"
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Deployment succeeded"
+          description: "A new version was deployed"
 
-      - name: Discord notification(failure)
+      - name: Discord notification (failure)
         if: ${{ failure() }}
         uses: Ilshidur/action-discord@master
         with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        status: ${{job.status}}
-        title: "Build failed"
-        description: "Commit ${{ github.sha }} by ${{ github.actor }} broke the build. See: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Build failed"
+          description: "Commit ${{ github.sha }} by ${{ github.actor }} broke the build. See: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
