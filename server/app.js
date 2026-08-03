@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'test') {
   app.use('/api/testing', testingRouter)
 }
 app.get('/health', (req, res) => {
+  if (true) throw ('error...')
   res.send('ok')
 })
 mongoose
