@@ -68,11 +68,19 @@ jobs:
       - name: Run Playwright tests
         run: npm test
 
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
   deploy:
     needs: [build_and_test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
       - name: Trigger deployment
         if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
@@ -80,4 +88,35 @@ jobs:
   tag_release:
     needs: [build_and_test, deploy]
     runs-on: ubuntu-latest
-    if: ${{
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+
+  notification-discord:
+    needs: [build_and_test, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Discord notification (success)
+        if: ${{ success() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "✅ Deployment succeeded for {{ EVENT_PAYLOAD.repository.full_name }} (commit ${{ github.sha }} by ${{ github.actor }})"
+
+      - name: Discord notification (failure)
+        if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "❌ Build failed on commit ${{ github.sha }} by ${{ github.actor }}. See: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
