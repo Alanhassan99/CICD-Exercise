@@ -61,6 +61,8 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-        
+
       - name: Run Playwright tests
         run: npm test
+      - name: Trigger deployment
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
