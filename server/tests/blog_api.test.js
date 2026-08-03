@@ -5,11 +5,18 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 const api = supertest(app)
 let token = ''
 
 beforeEach(async () => {
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ username: 'Alan123', passwordHash })
+  await user.save()
+
   await helper.theReset()
   const users = await helper.usersInDb()
   const theUser = users.find((user) => user.username === 'Alan123')
