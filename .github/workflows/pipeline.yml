@@ -59,5 +59,8 @@ jobs:
           cd client
           npm run dev -- --host 0.0.0.0 &
 
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+        
       - name: Run Playwright tests
         run: npm test
